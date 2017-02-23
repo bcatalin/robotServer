@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+    <head>
+        <script src='js/smoothie.js'></script>
+        <script src='//code.jquery.com/jquery-1.7.2.min.js'></script>
+        <script src='//10.0.2.15:1234/socket.io/socket.io.js'></script>
+        
+        <script>
+         var socket = io.connect('//10.0.2.15:1234');
+   //      var smoothie = new SmoothieChart();
+         
+         var smoothie = new SmoothieChart({
+              /*grid: { strokeStyle:'rgb(125, 0, 0)', fillStyle:'rgb(60, 0, 0)', lineWidth: 1, millisPerLine: 250, verticalSections: 6, },
+               labels: { fillStyle:'rgb(60, 0, 0)' },*/
+               millisPerPixel:67 /* how fast is going to be */
+         });       
+
+         // Data
+         var axeX = new TimeSeries();
+         var axeY = new TimeSeries();
+         var axeZ = new TimeSeries();
+         $(document).ready(function()
+         {
+                $("#button").click(function() {
+                    socket.emit('arduino' ,"Hello World!");
+                })
+
+                $("#button_rnd").click(function() {
+                    socket.emit('rnd' , Math.floor((Math.random() * 100) + 1) );
+                })
+
+               smoothie.streamTo(document.getElementById("mycanvas"), 1000 /*delay*/); //decrease this one to miliseconds
+         })
+         
+         socket.on('welcome', function(data) 
+         {
+                $('#messages').append('<li>' + data.message + '</li>');
+                socket.emit('atime', {data: 'foo!'});
+         });
+         
+         socket.on('atime', function(data) {
+                console.log(data);
+                $('#messages').append('<li>' + data.time + '</li>');
+         });
+         
+         socket.on('arduino', function(data) {
+                console.log(data);
+                $('#messages').append('<li>' + data + '</li>');
+         });
+
+         socket.on('rnd', function(data) {
+                console.log(data);
+                $('#messages').append('<li>' + data.message + '</li>');
+                axeX.append(new Date().getTime(), Math.floor((Math.random() * 100) + 1));
+                axeY.append(new Date().getTime(), data.message);
+                axeZ.append(new Date().getTime(), Math.floor((Math.random() * 100) + 1));
+                
+                 smoothie.addTimeSeries(axeZ,
+                    {  strokeStyle:'rgba(0,0,255,0.67)', lineWidth:5}
+                    );
+                smoothie.addTimeSeries(axeX,
+                     { strokeStyle:'rgba(0,255,0,0.67)',  lineWidth:2 }
+                    );
+                smoothie.addTimeSeries(axeY,
+                     { strokeStyle:'rgba(255,0,255,0.67)', lineWidth:2 }
+                    );
+               
+         });
+		
+         socket.on('error', function() { console.error(arguments) });
+         socket.on('message', function() { console.log(arguments) });
+
+
+
+        </script>
+    </head>
+    
+    <body style="background-color:#333333">
+        <canvas id="mycanvas" width="800" height="196"></canvas><br>
+        <button type="button" id='button'>Send Message to ROBARM</button> 
+        <button type="button" id='button_rnd'>Send RND</button>
+        <ul id='messages'></ul>
+    </body>
+</html>

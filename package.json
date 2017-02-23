@@ -1,0 +1,28 @@
+{
+  "name": "examples",
+  "version": "1.0.0",
+  "description": "nodeJS server code",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bcatalin/robotServer.git"
+  },
+  "keywords": [
+    "nodeJS",
+    "socket.io",
+    "ADXL345"
+  ],
+  "author": "Catalin Batrinu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bcatalin/robotServer/issues"
+  },
+  "homepage": "https://github.com/bcatalin/robotServer#readme",
+  "dependencies": {
+    "smoothie": "^1.27.0",
+    "socket.io": "^1.7.3"
+  }
+}
