@@ -116,6 +116,10 @@ function sendTime() {
     io.sockets.emit('atime', { time: new Date().toJSON() });
 }
 
+function sendLight(data) {
+    io.sockets.emit('light', { light: data.message });
+}
+
 io.on('connection', function (socket) 
 {
 	console.log("Connected");
@@ -131,6 +135,12 @@ io.on('connection', function (socket)
     console.log(data);
     });
   
+  socket.on('light', function (data) {
+    //console.log("light received on SERVER from ESP")
+    sendLight(data);
+    //console.log(data);
+    });
+
   socket.on('JSON', function (data) 
   {
 //	console.log(data);

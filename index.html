@@ -3,18 +3,32 @@
     <head>
         <script src='js/smoothie.js'></script>
         <script src='//code.jquery.com/jquery-1.7.2.min.js'></script>
-        <script src='//10.0.2.15:1234/socket.io/socket.io.js'></script>
+<!--        <script src='//10.0.2.15:1234/socket.io/socket.io.js'></script> -->
+        <script src='//192.168.1.146:1234/socket.io/socket.io.js'></script>
         
         <script>
-         var socket = io.connect('//10.0.2.15:1234');
+         var socket = io.connect('//192.168.1.146:1234');
+         //var socket = io.connect('//10.0.2.15:1234');
    //      var smoothie = new SmoothieChart();
-         
+         var speed = 50;
          var smoothie = new SmoothieChart({
               /*grid: { strokeStyle:'rgb(125, 0, 0)', fillStyle:'rgb(60, 0, 0)', lineWidth: 1, millisPerLine: 250, verticalSections: 6, },
                labels: { fillStyle:'rgb(60, 0, 0)' },*/
-               millisPerPixel:67 /* how fast is going to be */
+               millisPerPixel:speed /* how fast is going to be 67 */
          });       
 
+
+         var smoothie2 = new SmoothieChart({
+              /*grid: { strokeStyle:'rgb(125, 0, 0)', fillStyle:'rgb(60, 0, 0)', lineWidth: 1, millisPerLine: 250, verticalSections: 6, },
+               labels: { fillStyle:'rgb(60, 0, 0)' },*/
+               millisPerPixel:speed /* how fast is going to be 67 */
+         });
+
+         var smoothie3 = new SmoothieChart({
+              /*grid: { strokeStyle:'rgb(125, 0, 0)', fillStyle:'rgb(60, 0, 0)', lineWidth: 1, millisPerLine: 250, verticalSections: 6, },
+               labels: { fillStyle:'rgb(60, 0, 0)' },*/
+               millisPerPixel:speed /* how fast is going to be 67 */
+         });
          // Data
          var axeX = new TimeSeries();
          var axeY = new TimeSeries();
@@ -29,46 +43,72 @@
                     socket.emit('rnd' , Math.floor((Math.random() * 100) + 1) );
                 })
 
-               smoothie.streamTo(document.getElementById("mycanvas"), 1000 /*delay*/); //decrease this one to miliseconds
+               smoothie.streamTo(document.getElementById("mycanvas"));//, 1000 /*delay*/); //decrease this one to miliseconds
+               smoothie2.streamTo(document.getElementById("mycanvas2"));//, 1000 /*delay*/); //decrease this one to miliseconds
+               smoothie3.streamTo(document.getElementById("mycanvas3"));//, 1000 /*delay*/); //decrease this one to miliseconds
          })
          
          socket.on('welcome', function(data) 
          {
+                console.log("welcome recived Send atime ")
                 $('#messages').append('<li>' + data.message + '</li>');
                 socket.emit('atime', {data: 'foo!'});
          });
          
          socket.on('atime', function(data) {
+                console.log("----- atime ---->");
                 console.log(data);
                 $('#messages').append('<li>' + data.time + '</li>');
          });
+
+         socket.on('light', function(data) {
+                //console.log("====== light received ======>");
+                //console.log(data.light);
+                //$('#messages').append('<li>' + data + '</li>');
+
+                axeX.append(new Date().getTime(), Number(data.light) ) ;
+                axeY.append(new Date().getTime(), Number(data.light) - 100 );
+                axeZ.append(new Date().getTime(), Number(data.light) + 100  );
+                
+                 smoothie.addTimeSeries(axeZ,
+                    {  strokeStyle:'rgba(0,0,255,0.67)', lineWidth:2}
+                    );
+                smoothie2.addTimeSeries(axeX,
+                     { strokeStyle:'rgba(0,255,0,0.67)',  lineWidth:2 }
+                    );
+                smoothie3.addTimeSeries(axeY,
+                     { strokeStyle:'rgba(255,0,255,0.67)', lineWidth:2 }
+                    );
+
+         });
          
          socket.on('arduino', function(data) {
+                console.log("arduino###")
                 console.log(data);
                 $('#messages').append('<li>' + data + '</li>');
          });
 
-         socket.on('rnd', function(data) {
-                console.log(data);
-                $('#messages').append('<li>' + data.message + '</li>');
-                axeX.append(new Date().getTime(), Math.floor((Math.random() * 100) + 1));
-                axeY.append(new Date().getTime(), data.message);
-                axeZ.append(new Date().getTime(), Math.floor((Math.random() * 100) + 1));
+         // socket.on('rnd', function(data) {
+         //        console.log(data);
+         //        $('#messages').append('<li>' + data.message + '</li>');
+         //        axeX.append(new Date().getTime(), Math.floor((Math.random() * 100) + 1));
+         //        axeY.append(new Date().getTime(), data.message);
+         //        axeZ.append(new Date().getTime(), Math.floor((Math.random() * 100) + 1));
                 
-                 smoothie.addTimeSeries(axeZ,
-                    {  strokeStyle:'rgba(0,0,255,0.67)', lineWidth:5}
-                    );
-                smoothie.addTimeSeries(axeX,
-                     { strokeStyle:'rgba(0,255,0,0.67)',  lineWidth:2 }
-                    );
-                smoothie.addTimeSeries(axeY,
-                     { strokeStyle:'rgba(255,0,255,0.67)', lineWidth:2 }
-                    );
+         //         smoothie.addTimeSeries(axeZ,
+         //            {  strokeStyle:'rgba(0,0,255,0.67)', lineWidth:2}
+         //            );
+         //        smoothie.addTimeSeries(axeX,
+         //             { strokeStyle:'rgba(0,255,0,0.67)',  lineWidth:2 }
+         //            );
+         //        smoothie.addTimeSeries(axeY,
+         //             { strokeStyle:'rgba(255,0,255,0.67)', lineWidth:2 }
+         //            );
                
-         });
+         // });
 		
          socket.on('error', function() { console.error(arguments) });
-         socket.on('message', function() { console.log(arguments) });
+         socket.on('message', function() { console.log("message-----");console.log(arguments) });
 
 
 
@@ -76,7 +116,9 @@
     </head>
     
     <body style="background-color:#333333">
-        <canvas id="mycanvas" width="800" height="196"></canvas><br>
+        <canvas id="mycanvas" width="200" height="100"></canvas><br><br>
+        <canvas id="mycanvas2" width="200" height="100"></canvas><br><br>
+        <canvas id="mycanvas3" width="200" height="100"></canvas><br>
         <button type="button" id='button'>Send Message to ROBARM</button> 
         <button type="button" id='button_rnd'>Send RND</button>
         <ul id='messages'></ul>
