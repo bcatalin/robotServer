@@ -197,12 +197,13 @@
       // Add to the end of the array
       this.data.push([timestamp, value]);
     }
-
+    //console.log(this.data.length)
     this.maxValue = isNaN(this.maxValue) ? value : Math.max(this.maxValue, value);
     this.minValue = isNaN(this.minValue) ? value : Math.min(this.minValue, value);
   };
 
   TimeSeries.prototype.dropOldData = function(oldestValidTime, maxDataSetLength) {
+    //console.log("maxDataSetLength: "+ maxDataSetLength)
     // We must always keep one expired data point as we need this to draw the
     // line that comes into the chart from the left, but any points prior to that can be removed.
     var removeCount = 0;

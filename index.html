@@ -10,7 +10,7 @@
          var socket = io.connect('//192.168.1.146:1234');
          //var socket = io.connect('//10.0.2.15:1234');
    //      var smoothie = new SmoothieChart();
-         var speed = 50;
+         var speed = 10;
          var smoothie = new SmoothieChart({
               /*grid: { strokeStyle:'rgb(125, 0, 0)', fillStyle:'rgb(60, 0, 0)', lineWidth: 1, millisPerLine: 250, verticalSections: 6, },
                labels: { fillStyle:'rgb(60, 0, 0)' },*/
@@ -30,9 +30,13 @@
                millisPerPixel:speed /* how fast is going to be 67 */
          });
          // Data
-         var axeX = new TimeSeries();
-         var axeY = new TimeSeries();
-         var axeZ = new TimeSeries();
+         var axeX1 = new TimeSeries();
+         var axeY1 = new TimeSeries();
+         var axeZ1 = new TimeSeries();
+
+         var axeX2 = new TimeSeries();
+         var axeY2 = new TimeSeries();
+         var axeZ2 = new TimeSeries();
          $(document).ready(function()
          {
                 $("#button").click(function() {
@@ -43,9 +47,47 @@
                     socket.emit('rnd' , Math.floor((Math.random() * 100) + 1) );
                 })
 
-               smoothie.streamTo(document.getElementById("mycanvas"));//, 1000 /*delay*/); //decrease this one to miliseconds
-               smoothie2.streamTo(document.getElementById("mycanvas2"));//, 1000 /*delay*/); //decrease this one to miliseconds
-               smoothie3.streamTo(document.getElementById("mycanvas3"));//, 1000 /*delay*/); //decrease this one to miliseconds
+               smoothie.streamTo(document.getElementById("mycanvas"), 100 /*delay*/); //decrease this one to miliseconds
+               smoothie2.streamTo(document.getElementById("mycanvas2"),100 );//, 1000 /*delay*/); //decrease this one to miliseconds
+               //smoothie3.streamTo(document.getElementById("mycanvas3"));//, 1000 /*delay*/); //decrease this one to miliseconds
+
+                 smoothie.addTimeSeries(axeZ1,
+                    {  strokeStyle:'rgba(0,0,255,0.67)', lineWidth:2}
+                    );
+
+                 smoothie.addTimeSeries(axeX1,
+                    {  strokeStyle:'green', lineWidth:2}
+                    );
+                 smoothie.addTimeSeries(axeY1,
+                    {  strokeStyle:'red', lineWidth:2}
+                    );                 
+
+
+
+
+                smoothie2.addTimeSeries(axeX2,
+                     { strokeStyle:'rgba(0,255,0,0.67)',  lineWidth:2 }
+                    );
+
+                smoothie2.addTimeSeries(axeY2,
+                     { strokeStyle:'white',  lineWidth:2 }
+                    );
+                smoothie2.addTimeSeries(axeZ2,
+                     { strokeStyle:'yellow',  lineWidth:2 }
+                    );                
+
+
+
+                // smoothie3.addTimeSeries(axeY1,
+                //      { strokeStyle:'brown', lineWidth:2 }
+                //    );                 
+                // smoothie3.addTimeSeries(axeX1,
+                //      { strokeStyle:'blue', lineWidth:2 }
+                //    );    
+                // smoothie3.addTimeSeries(axeZ1,
+                //      { strokeStyle:'orange', lineWidth:2 }
+                //   );    
+
          })
          
          socket.on('welcome', function(data) 
@@ -60,25 +102,36 @@
                 console.log(data);
                 $('#messages').append('<li>' + data.time + '</li>');
          });
+          socket.on('acc_data', function(data) {
+
+            if (data.acc_data.device_name == "RBT_81C996")
+            {
+                //console.log(data.acc_data.device_name);
+                //console.log(data.acc_data.x);
+                axeX1.append(new Date().getTime(), Number(data.acc_data.x) ) ;
+                axeY1.append(new Date().getTime(), Number(data.acc_data.y) - 400 );
+                axeZ1.append(new Date().getTime(), Number(data.acc_data.z) - 200 );
+            }
+            else if(data.acc_data.device_name == "RBT_D232B4")
+            {
+                //console.log(data.acc_data.device_name);
+                //console.log(data.acc_data.x);
+                axeX2.append(new Date().getTime(), Number(data.acc_data.x) ) ;
+                axeY2.append(new Date().getTime(), Number(data.acc_data.y) - 400 );
+                axeZ2.append(new Date().getTime(), Number(data.acc_data.z) - 200 );                
+            }
+          });
 
          socket.on('light', function(data) {
                 //console.log("====== light received ======>");
                 //console.log(data.light);
                 //$('#messages').append('<li>' + data + '</li>');
 
-                axeX.append(new Date().getTime(), Number(data.light) ) ;
-                axeY.append(new Date().getTime(), Number(data.light) - 100 );
-                axeZ.append(new Date().getTime(), Number(data.light) + 100  );
-                
-                 smoothie.addTimeSeries(axeZ,
-                    {  strokeStyle:'rgba(0,0,255,0.67)', lineWidth:2}
-                    );
-                smoothie2.addTimeSeries(axeX,
-                     { strokeStyle:'rgba(0,255,0,0.67)',  lineWidth:2 }
-                    );
-                smoothie3.addTimeSeries(axeY,
-                     { strokeStyle:'rgba(255,0,255,0.67)', lineWidth:2 }
-                    );
+                // axeX1.append(new Date().getTime(), Number(data.light) ) ;
+                // axeY1.append(new Date().getTime(), Number(data.light) - 400 );
+                // axeZ1.append(new Date().getTime(), Math.random() * 200 );
+
+
 
          });
          
@@ -91,17 +144,17 @@
          // socket.on('rnd', function(data) {
          //        console.log(data);
          //        $('#messages').append('<li>' + data.message + '</li>');
-         //        axeX.append(new Date().getTime(), Math.floor((Math.random() * 100) + 1));
-         //        axeY.append(new Date().getTime(), data.message);
-         //        axeZ.append(new Date().getTime(), Math.floor((Math.random() * 100) + 1));
+         //        axeX1.append(new Date().getTime(), Math.floor((Math.random() * 100) + 1));
+         //        axeY1.append(new Date().getTime(), data.message);
+         //        axeZ1.append(new Date().getTime(), Math.floor((Math.random() * 100) + 1));
                 
-         //         smoothie.addTimeSeries(axeZ,
+         //         smoothie.addTimeSeries(axeZ1,
          //            {  strokeStyle:'rgba(0,0,255,0.67)', lineWidth:2}
          //            );
-         //        smoothie.addTimeSeries(axeX,
+         //        smoothie.addTimeSeries(axeX1,
          //             { strokeStyle:'rgba(0,255,0,0.67)',  lineWidth:2 }
          //            );
-         //        smoothie.addTimeSeries(axeY,
+         //        smoothie.addTimeSeries(axeY1,
          //             { strokeStyle:'rgba(255,0,255,0.67)', lineWidth:2 }
          //            );
                
@@ -116,9 +169,9 @@
     </head>
     
     <body style="background-color:#333333">
-        <canvas id="mycanvas" width="200" height="100"></canvas><br><br>
-        <canvas id="mycanvas2" width="200" height="100"></canvas><br><br>
-        <canvas id="mycanvas3" width="200" height="100"></canvas><br>
+        <canvas id="mycanvas" width="1000" height="170"></canvas><br><br>
+        <canvas id="mycanvas2" width="1000" height="170"></canvas><br><br>
+       <!-- <canvas id="mycanvas3" width="1000" height="170"></canvas><br> -->
         <button type="button" id='button'>Send Message to ROBARM</button> 
         <button type="button" id='button_rnd'>Send RND</button>
         <ul id='messages'></ul>

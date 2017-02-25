@@ -122,7 +122,7 @@ function sendLight(data) {
 
 io.on('connection', function (socket) 
 {
-	console.log("Connected");
+	console.log("Connected from web browser");
   socket.emit('welcome', { message: 'Connected !!!!' });
   
   socket.on('connection', function (data) 
@@ -137,17 +137,19 @@ io.on('connection', function (socket)
   
   socket.on('light', function (data) {
     //console.log("light received on SERVER from ESP")
-    sendLight(data);
+    //sendLight(data);
     //console.log(data);
     });
 
   socket.on('JSON', function (data) 
   {
-//	console.log(data);
-	  var jsonStr = JSON.stringify(data);
-	  var parsed = ParseJson(jsonStr);
-    console.log(parsed);
-	  console.log(parsed.sensor);
+  	//console.log(data);
+    io.sockets.emit('acc_data', { acc_data: data });
+    //socket.emit('acc_data', { acc_data: data });
+	  //var jsonStr = JSON.stringify(data);
+	  //var parsed = ParseJson(jsonStr);
+    //console.log(parsed);
+	  //console.log(parsed.sensor);
   });
 
   socket.on('arduino', function (data) 
