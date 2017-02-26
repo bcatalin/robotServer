@@ -6,7 +6,9 @@ var path  = require('path');
 
 var KalmanFilter = require('kalmanjs').default;
 
-var kf = new KalmanFilter();
+var kx = new KalmanFilter();
+var ky = new KalmanFilter();
+var kz = new KalmanFilter();
 
 
 var webConnections = [];
@@ -188,13 +190,13 @@ io.on('connection', function (socket)
   {
   	//console.log(data.x);
     //console.log(kf.filter(data.x))
-    data.x = kf.filter(data.x);
-    //data.y = kf.filter(data.y);
-    //data.z = kf.filter(data.z);
+    // data.x = kx.filter(data.x);
+    // data.y = ky.filter(data.y);
+    // data.z = kz.filter(data.z);
     //io.sockets.emit('acc_data', { acc_data: data });
     //socket.broadcast.emit('acc_data', { acc_data: data });
     
-    for(var webBrowsers = 0; webBrowsers < webConnections.length; webBrowsers ++)
+    for(var webBrowsers = 0; webBrowsers < webConnections.length; webBrowsers++)
     {
       var sessionID = webConnections[webBrowsers];
       sessionID.emit('acc_data', { acc_data: data })

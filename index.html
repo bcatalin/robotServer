@@ -51,30 +51,15 @@
                smoothie2.streamTo(document.getElementById("mycanvas2"),1000 );//, 1000 /*delay*/); //decrease this one to miliseconds
                //smoothie3.streamTo(document.getElementById("mycanvas3"));//, 1000 /*delay*/); //decrease this one to miliseconds
 
-                 smoothie.addTimeSeries(axeZ1,
-                    {  strokeStyle:'rgba(0,0,255,0.67)', lineWidth:2}
-                    );
-
-                 smoothie.addTimeSeries(axeX1,
-                    {  strokeStyle:'green', lineWidth:2}
-                    );
-                 smoothie.addTimeSeries(axeY1,
-                    {  strokeStyle:'red', lineWidth:2}
-                    );                 
 
 
+                smoothie.addTimeSeries(axeX1, {  strokeStyle:'green', lineWidth:2}  );
+                smoothie.addTimeSeries(axeY1, {  strokeStyle:'red',   lineWidth:2}  );                 
+                smoothie.addTimeSeries(axeZ1, {  strokeStyle:'brown', lineWidth:2 } );
 
-
-                smoothie2.addTimeSeries(axeX2,
-                     { strokeStyle:'orange',  lineWidth:2 }
-                    );
-
-                smoothie2.addTimeSeries(axeY2,
-                     { strokeStyle:'white',  lineWidth:2 }
-                    );
-                smoothie2.addTimeSeries(axeZ2,
-                     { strokeStyle:'yellow',  lineWidth:2 }
-                    );                
+                smoothie2.addTimeSeries(axeX2, { strokeStyle:'orange',  lineWidth:2 } );
+                smoothie2.addTimeSeries(axeY2, { strokeStyle:'white',   lineWidth:2 } );
+                smoothie2.addTimeSeries(axeZ2, { strokeStyle:'yellow',  lineWidth:2 } );                
 
 
 
@@ -106,23 +91,25 @@
 
 
          socket.on('acc_data', function(data) {
-
+            var currentDate = new Date().getTime()
            // console.log(data.acc_data.device_name);
             if (data.acc_data.device_name == "RBT_81C996")
             {
                 //console.log(data.acc_data.device_name);
                 //console.log(data.acc_data.x);
-                axeX1.append(new Date().getTime(), Number(data.acc_data.x) ) ;
-                axeY1.append(new Date().getTime(), Number(data.acc_data.y) + 100 );
-                axeZ1.append(new Date().getTime(), Number(data.acc_data.z) - 100 );
+                 
+                axeX1.append(currentDate, Number(data.acc_data.x) ) ;
+                axeY1.append(currentDate, Number(data.acc_data.y) + 100 );
+                axeZ1.append(currentDate, Number(data.acc_data.z) - 100 );
+                return;
             }
             else if(data.acc_data.device_name == "RBT_D232B4")
             {
                 //console.log(data.acc_data.device_name);
                 //console.log(data.acc_data.x);
-                axeX2.append(new Date().getTime(), Number(data.acc_data.x) ) ;
-                axeY2.append(new Date().getTime(), Number(data.acc_data.y)  );
-                axeZ2.append(new Date().getTime(), Number(data.acc_data.z)  );                
+                axeX2.append(currentDate, Number(data.acc_data.x)  ) ;
+                axeY2.append(currentDate, Number(data.acc_data.y) + 100 );
+                axeZ2.append(currentDate, Number(data.acc_data.z) - 100  );                
             }
           });
 
