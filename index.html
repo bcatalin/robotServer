@@ -37,6 +37,12 @@
          var axeX2 = new TimeSeries();
          var axeY2 = new TimeSeries();
          var axeZ2 = new TimeSeries();
+
+
+         var axeX3 = new TimeSeries();
+         var axeY3 = new TimeSeries();
+         var axeZ3 = new TimeSeries();
+
          $(document).ready(function()
          {
                 $("#button").click(function() {
@@ -49,7 +55,7 @@
 
                smoothie.streamTo(document.getElementById("mycanvas"), 1000 /*delay*/); //decrease this one to miliseconds
                smoothie2.streamTo(document.getElementById("mycanvas2"),1000 );//, 1000 /*delay*/); //decrease this one to miliseconds
-               //smoothie3.streamTo(document.getElementById("mycanvas3"));//, 1000 /*delay*/); //decrease this one to miliseconds
+               smoothie3.streamTo(document.getElementById("mycanvas3"), 1000 /*delay*/); //decrease this one to miliseconds
 
 
 
@@ -63,15 +69,15 @@
 
 
 
-                // smoothie3.addTimeSeries(axeY1,
-                //      { strokeStyle:'brown', lineWidth:2 }
-                //    );                 
-                // smoothie3.addTimeSeries(axeX1,
-                //      { strokeStyle:'blue', lineWidth:2 }
-                //    );    
-                // smoothie3.addTimeSeries(axeZ1,
-                //      { strokeStyle:'orange', lineWidth:2 }
-                //   );    
+                smoothie3.addTimeSeries(axeY3,
+                     { strokeStyle:'brown', lineWidth:2 }
+                   );                 
+                smoothie3.addTimeSeries(axeX3,
+                     { strokeStyle:'blue', lineWidth:2 }
+                   );    
+                smoothie3.addTimeSeries(axeZ3,
+                     { strokeStyle:'orange', lineWidth:2 }
+                  );    
 
          })
          
@@ -111,6 +117,14 @@
                 axeY2.append(currentDate, Number(data.acc_data.y) + 100 );
                 axeZ2.append(currentDate, Number(data.acc_data.z) - 100  );                
             }
+            else
+            {
+                axeX3.append(currentDate, Number(data.acc_data.x)  ) ;
+                axeY3.append(currentDate, Number(data.acc_data.y) + 100 );
+                axeZ3.append(currentDate, Number(data.acc_data.z) - 100  );
+            }
+
+
           });
 
          socket.on('light', function(data) {
@@ -162,7 +176,7 @@
     <body style="background-color:#333333">
         <canvas id="mycanvas" width="1000" height="170"></canvas><br><br>
         <canvas id="mycanvas2" width="1000" height="170"></canvas><br><br>
-       <!-- <canvas id="mycanvas3" width="1000" height="170"></canvas><br> -->
+        <canvas id="mycanvas3" width="1000" height="170"></canvas><br> 
         <button type="button" id='button'>Send Message to ROBARM</button> 
         <button type="button" id='button_rnd'>Send RND</button>
         <ul id='messages'></ul>
