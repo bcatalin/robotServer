@@ -10,7 +10,7 @@
          var socket = io.connect('//192.168.1.146:1234');
          //var socket = io.connect('//10.0.2.15:1234');
    //      var smoothie = new SmoothieChart();
-         var speed = 10;
+         var speed = 20; // ms per pixel
          var smoothie = new SmoothieChart({
               /*grid: { strokeStyle:'rgb(125, 0, 0)', fillStyle:'rgb(60, 0, 0)', lineWidth: 1, millisPerLine: 250, verticalSections: 6, },
                labels: { fillStyle:'rgb(60, 0, 0)' },*/
@@ -47,8 +47,8 @@
                     socket.emit('rnd' , Math.floor((Math.random() * 100) + 1) );
                 })
 
-               smoothie.streamTo(document.getElementById("mycanvas"), 100 /*delay*/); //decrease this one to miliseconds
-               smoothie2.streamTo(document.getElementById("mycanvas2"),100 );//, 1000 /*delay*/); //decrease this one to miliseconds
+               smoothie.streamTo(document.getElementById("mycanvas"), 1000 /*delay*/); //decrease this one to miliseconds
+               smoothie2.streamTo(document.getElementById("mycanvas2"),1000 );//, 1000 /*delay*/); //decrease this one to miliseconds
                //smoothie3.streamTo(document.getElementById("mycanvas3"));//, 1000 /*delay*/); //decrease this one to miliseconds
 
                  smoothie.addTimeSeries(axeZ1,
@@ -66,7 +66,7 @@
 
 
                 smoothie2.addTimeSeries(axeX2,
-                     { strokeStyle:'rgba(0,255,0,0.67)',  lineWidth:2 }
+                     { strokeStyle:'orange',  lineWidth:2 }
                     );
 
                 smoothie2.addTimeSeries(axeY2,
@@ -102,23 +102,27 @@
                 console.log(data);
                 $('#messages').append('<li>' + data.time + '</li>');
          });
-          socket.on('acc_data', function(data) {
+         
 
+
+         socket.on('acc_data', function(data) {
+
+           // console.log(data.acc_data.device_name);
             if (data.acc_data.device_name == "RBT_81C996")
             {
                 //console.log(data.acc_data.device_name);
                 //console.log(data.acc_data.x);
                 axeX1.append(new Date().getTime(), Number(data.acc_data.x) ) ;
-                axeY1.append(new Date().getTime(), Number(data.acc_data.y) - 400 );
-                axeZ1.append(new Date().getTime(), Number(data.acc_data.z) - 200 );
+                axeY1.append(new Date().getTime(), Number(data.acc_data.y) + 100 );
+                axeZ1.append(new Date().getTime(), Number(data.acc_data.z) - 100 );
             }
             else if(data.acc_data.device_name == "RBT_D232B4")
             {
                 //console.log(data.acc_data.device_name);
                 //console.log(data.acc_data.x);
                 axeX2.append(new Date().getTime(), Number(data.acc_data.x) ) ;
-                axeY2.append(new Date().getTime(), Number(data.acc_data.y) - 400 );
-                axeZ2.append(new Date().getTime(), Number(data.acc_data.z) - 200 );                
+                axeY2.append(new Date().getTime(), Number(data.acc_data.y)  );
+                axeZ2.append(new Date().getTime(), Number(data.acc_data.z)  );                
             }
           });
 
