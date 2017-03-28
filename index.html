@@ -52,7 +52,7 @@
          $(document).ready(function()
          {
 
-addRam("123");
+//addRam("123");
                 $("#button").click(function() {
                     socket.emit('arduino' ,"Hello World!");
                 })
@@ -88,6 +88,7 @@ addRam("123");
                 console.log("welcome recived Send atime ")
                 $('#messages').append('<li>' + data.message + '</li>');
                 socket.emit('atime', {data: 'foo!'});
+                addRam("123");
          });
          
          socket.on('atime', function(data) {
@@ -189,5 +190,6 @@ addRam("123");
         <button type="button" id='button'>Send Message to ROBARM</button> 
         <button type="button" id='button_rnd'>Send RND</button>
         <ul id='messages'></ul>
+        <div id="main_id"></div>
     </body>
 </html>
