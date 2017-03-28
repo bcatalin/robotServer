@@ -13,6 +13,8 @@
           var socket = io.connect('//46.101.223.98:1234'); 
        // var socket = io.connect('//10.0.2.15:1234');
 
+var ram_collection = [];
+
          var speed = 20; // ms per pixel
          var smoothie = new SmoothieChart({
               /*grid: { strokeStyle:'rgb(125, 0, 0)', fillStyle:'rgb(60, 0, 0)', lineWidth: 1, millisPerLine: 250, verticalSections: 6, },
@@ -88,7 +90,9 @@
                 console.log("welcome recived Send atime ")
                 $('#messages').append('<li>' + data.message + '</li>');
                 socket.emit('atime', {data: 'foo!'});
-                addRam("123");
+                //addRam("123");
+                //addRam("RBT123456");
+                console.log(data);
          });
          
          socket.on('atime', function(data) {
@@ -103,32 +107,10 @@
          {
             var currentDate = new Date().getTime()
            // console.log(data.acc_data.device_name);
-            if (data.acc_data.device_name == "RBT_81C996")
-            {
-                //console.log(data.acc_data.device_name);
-                //console.log(data.acc_data.x);
-                 
-                //axeX1.append(currentDate, Number(data.acc_data.x) ) ;
-                //axeY1.append(currentDate, Number(data.acc_data.y) );
-                //axeZ1.append(currentDate, Number(data.acc_data.z) );
-                return;
-            }
-            else if(data.acc_data.device_name == "RBT_D232B4")
-            {
-                //console.log(data.acc_data.device_name);
-                //console.log(data.acc_data.x);
-          //      axeX2.append(currentDate, Number(data.acc_data.x)  ) ;
-//                axeY2.append(currentDate, Number(data.acc_data.y) + 100 );
-//                axeZ2.append(currentDate, Number(data.acc_data.z) - 100  );               
-                  return; 
-            }
-            else
-            {
                 axeX3.append(currentDate, Number(data.acc_data.x )  ) ;
                 axeY3.append(currentDate, Number(data.acc_data.y)  );
                 axeZ3.append(currentDate, Number(data.acc_data.z)  );
-            }
-
+                //console.log(ram_collection[0].ram_id);
 
           });
 

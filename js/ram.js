@@ -170,4 +170,30 @@ function addRam(ram_id)
             ram_table.appendChild(tbody);
             main_div.appendChild(ram_table);
 
+         var smoothie = new SmoothieChart({
+              /*grid: { strokeStyle:'rgb(125, 0, 0)', fillStyle:'rgb(60, 0, 0)', lineWidth: 1, millisPerLine: 250, verticalSections: 6, },
+               labels: { fillStyle:'rgb(60, 0, 0)' },*/
+               millisPerPixel:speed, /* how fast is going to be 67 */
+                maxValue:32767,minValue:-32768,  timestampFormatter:SmoothieChart.timeFormatter
+         });
+
+         var axeX = new TimeSeries();
+         var axeY = new TimeSeries();
+         var axeZ = new TimeSeries();
+
+         smoothie.streamTo(document.getElementById("canvas_"+ram_id), 1000 /*delay*/);
+         
+         smoothie.addTimeSeries(axeX, {  strokeStyle:'green', lineWidth:2}  );
+         smoothie.addTimeSeries(axeY, {  strokeStyle:'red',   lineWidth:2}  );
+         smoothie.addTimeSeries(axeZ, {  strokeStyle:'brown', lineWidth:2 } );
+         
+         var obj = new Object();
+         obj.smoothie = smoothie;
+         obj.axeX = axeX;
+         obj.axeY = axeY;
+         obj.axeZ = axeZ; 
+         obj.ram_id = ram_id;
+
+         ram_collection.push(obj);
+
     }//end addRAM
