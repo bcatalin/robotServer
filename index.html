@@ -4,30 +4,36 @@
         <script src='js/smoothie.js'></script>
         <script src='//code.jquery.com/jquery-1.7.2.min.js'></script>
 <!--        <script src='//10.0.2.15:1234/socket.io/socket.io.js'></script> -->
-        <script src='//192.168.1.146:1234/socket.io/socket.io.js'></script>
+<!--        <script src='//192.168.1.146:1234/socket.io/socket.io.js'></script> -->
+        <script src='//46.101.223.98:1234/socket.io/socket.io.js'></script>
+        <script src='js/ram.js'></script>
         
         <script>
-         var socket = io.connect('//192.168.1.146:1234');
-         //var socket = io.connect('//10.0.2.15:1234');
-   //      var smoothie = new SmoothieChart();
+       // var socket = io.connect('//192.168.1.146:1234');
+          var socket = io.connect('//46.101.223.98:1234'); 
+       // var socket = io.connect('//10.0.2.15:1234');
+
          var speed = 20; // ms per pixel
          var smoothie = new SmoothieChart({
               /*grid: { strokeStyle:'rgb(125, 0, 0)', fillStyle:'rgb(60, 0, 0)', lineWidth: 1, millisPerLine: 250, verticalSections: 6, },
                labels: { fillStyle:'rgb(60, 0, 0)' },*/
-               millisPerPixel:speed /* how fast is going to be 67 */
+               millisPerPixel:speed, /* how fast is going to be 67 */
+                maxValue:32767,minValue:-32768,  timestampFormatter:SmoothieChart.timeFormatter
          });       
 
 
          var smoothie2 = new SmoothieChart({
               /*grid: { strokeStyle:'rgb(125, 0, 0)', fillStyle:'rgb(60, 0, 0)', lineWidth: 1, millisPerLine: 250, verticalSections: 6, },
                labels: { fillStyle:'rgb(60, 0, 0)' },*/
-               millisPerPixel:speed /* how fast is going to be 67 */
+               millisPerPixel:speed, /* how fast is going to be 67 */
+               maxValue:32767,minValue:-32768,  timestampFormatter:SmoothieChart.timeFormatter
          });
 
          var smoothie3 = new SmoothieChart({
               /*grid: { strokeStyle:'rgb(125, 0, 0)', fillStyle:'rgb(60, 0, 0)', lineWidth: 1, millisPerLine: 250, verticalSections: 6, },
                labels: { fillStyle:'rgb(60, 0, 0)' },*/
-               millisPerPixel:speed /* how fast is going to be 67 */
+               millisPerPixel:speed, /* how fast is going to be 67 */
+               maxValue:32767,minValue:-32768,  timestampFormatter:SmoothieChart.timeFormatter
          });
          // Data
          var axeX1 = new TimeSeries();
@@ -45,6 +51,8 @@
 
          $(document).ready(function()
          {
+
+addRam("123");
                 $("#button").click(function() {
                     socket.emit('arduino' ,"Hello World!");
                 })
@@ -69,15 +77,9 @@
 
 
 
-                smoothie3.addTimeSeries(axeY3,
-                     { strokeStyle:'brown', lineWidth:2 }
-                   );                 
-                smoothie3.addTimeSeries(axeX3,
-                     { strokeStyle:'blue', lineWidth:2 }
-                   );    
-                smoothie3.addTimeSeries(axeZ3,
-                     { strokeStyle:'orange', lineWidth:2 }
-                  );    
+                smoothie3.addTimeSeries(axeY3, { strokeStyle:'brown', lineWidth:2 }   );                 
+                smoothie3.addTimeSeries(axeX3, { strokeStyle:'blue', lineWidth:2 }    );    
+                smoothie3.addTimeSeries(axeZ3, { strokeStyle:'orange', lineWidth:2 }  );    
 
          })
          
@@ -96,7 +98,8 @@
          
 
 
-         socket.on('acc_data', function(data) {
+         socket.on('acc_data', function(data) 
+         {
             var currentDate = new Date().getTime()
            // console.log(data.acc_data.device_name);
             if (data.acc_data.device_name == "RBT_81C996")
@@ -104,30 +107,32 @@
                 //console.log(data.acc_data.device_name);
                 //console.log(data.acc_data.x);
                  
-                axeX1.append(currentDate, Number(data.acc_data.x) ) ;
-                axeY1.append(currentDate, Number(data.acc_data.y) + 100 );
-                axeZ1.append(currentDate, Number(data.acc_data.z) - 100 );
+                //axeX1.append(currentDate, Number(data.acc_data.x) ) ;
+                //axeY1.append(currentDate, Number(data.acc_data.y) );
+                //axeZ1.append(currentDate, Number(data.acc_data.z) );
                 return;
             }
             else if(data.acc_data.device_name == "RBT_D232B4")
             {
                 //console.log(data.acc_data.device_name);
                 //console.log(data.acc_data.x);
-                axeX2.append(currentDate, Number(data.acc_data.x)  ) ;
-                axeY2.append(currentDate, Number(data.acc_data.y) + 100 );
-                axeZ2.append(currentDate, Number(data.acc_data.z) - 100  );                
+          //      axeX2.append(currentDate, Number(data.acc_data.x)  ) ;
+//                axeY2.append(currentDate, Number(data.acc_data.y) + 100 );
+//                axeZ2.append(currentDate, Number(data.acc_data.z) - 100  );               
+                  return; 
             }
             else
             {
-                axeX3.append(currentDate, Number(data.acc_data.x)  ) ;
-                axeY3.append(currentDate, Number(data.acc_data.y) + 100 );
-                axeZ3.append(currentDate, Number(data.acc_data.z) - 100  );
+                axeX3.append(currentDate, Number(data.acc_data.x )  ) ;
+                axeY3.append(currentDate, Number(data.acc_data.y)  );
+                axeZ3.append(currentDate, Number(data.acc_data.z)  );
             }
 
 
           });
 
-         socket.on('light', function(data) {
+         socket.on('light', function(data) 
+         {
                 //console.log("====== light received ======>");
                 //console.log(data.light);
                 //$('#messages').append('<li>' + data + '</li>');
@@ -135,8 +140,6 @@
                 // axeX1.append(new Date().getTime(), Number(data.light) ) ;
                 // axeY1.append(new Date().getTime(), Number(data.light) - 400 );
                 // axeZ1.append(new Date().getTime(), Math.random() * 200 );
-
-
 
          });
          
@@ -167,15 +170,21 @@
 		
          socket.on('error', function() { console.error(arguments) });
          socket.on('message', function() { console.log("message-----");console.log(arguments) });
-
-
-
+         socket.on('new_ram', function(data) 
+         {
+            console.log("SOCK: new_ram received");
+            console.log(data.new_ram.ram_id);
+            console.log(data.new_ram.machine_id);
+         });
         </script>
     </head>
     
     <body style="background-color:#333333">
+        <p> X </p>
         <canvas id="mycanvas" width="1000" height="170"></canvas><br><br>
+        <p> Y </p>
         <canvas id="mycanvas2" width="1000" height="170"></canvas><br><br>
+        <p> Z </p>
         <canvas id="mycanvas3" width="1000" height="170"></canvas><br> 
         <button type="button" id='button'>Send Message to ROBARM</button> 
         <button type="button" id='button_rnd'>Send RND</button>
