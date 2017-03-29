@@ -117,7 +117,7 @@ function deleteRAM(socket_id)
   }//end for
 }
 
-function addRAM(obj)
+function addRAMObject(obj)
 {
   for(var i=0; i < ramConnections.length; i++)
   {
@@ -165,7 +165,7 @@ io.on('connection', function (socket)
     //console.log(ParseJson(JSON.stringify(data)));
     new_ram.ram_id = data_json.ram_id; //console.log(new_ram.ram_id);
     new_ram.machine_id = data_json.machine_id
-    addRAM(new_ram);
+    addRAMObject(new_ram);
 printRAM();
     //new connection from a RAM is received in here. Need to send a message
     // to the connected clients to signal that a new RAM is up and running and

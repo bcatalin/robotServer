@@ -158,6 +158,7 @@ var ram_collection = [];
             console.log("SOCK: new_ram received");
             console.log(data.new_ram.ram_id);
             console.log(data.new_ram.machine_id);
+            addram(data.new_ram.ram_id);
          });
         </script>
     </head>
